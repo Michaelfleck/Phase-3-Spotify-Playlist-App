@@ -7,27 +7,40 @@ import Song from './components/Song';
 
 function App() {
 
-  // const spotify = Credentials();
+  const spotify = Credentials();
 
-  // const [token, setToken] = useState('')
+  const CLIENT_ID = spotify.ClientId
+  const SPOTIFY_AUTHORIZE_ENDPOINT = "https://accounts.spotify.com/authorize"
+  const REDIRECT_URI_AFTER_LOGIN = "http://localhost:3000/callback/"
 
-  // useEffect( () => {
+  // Listing out what we want from each user documentation here: https://developer.spotify.com/documentation/general/guides/authorization/scopes/#ugc-image-upload
+  const SCOPES = ["user-read-playback-state",
+                  "user-modify-playback-state",
+                  "user-read-private",
+                  "user-follow-read",
+                  "user-library-modify",
+                  "user-library-read",
+                  "streaming",
+                  "playlist-modify-private",
+                  "playlist-read-collaborative",
+                  "app-remote-control",
+                  "user-read-email",
+                  "playlist-read-private",
+                  "user-top-read",
+                  "playlist-modify-public",
+                  "user-read-currently-playing",
+                  "user-read-recently-played"]
+  
+  
+  const SPACE_DELIMITER = "%20"
+  const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER)
 
-  //   axios('https://accounts.spotify.com/api/token', {
-  //     headers: {
-  //       'Content-Type' : 'application/x-www-form-urlencoded',
-  //       'Authorization' : 'Basic ' + btoa(spotify.ClientId + ':' + spotify.ClientSecret)
-  //   },
-  //   data: 'grant_type=client_credentials',
-  //   method: 'POST'
-  // })
-  // .then(tokenResponse => {
-  //   console.log("testing tokenResponse")
-  //   console.log(tokenResponse.data.access_token);
-  //   setToken(tokenResponse.data.access_token)
-  //   console.log("-----------------------")
-  // });
-  // }, []);
+
+  const handleLoginData = (handleData) => {
+    window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`
+  }
+
+
 
   const [primaryUser, setPrimaryUser] = useState({
     username: "",
@@ -60,7 +73,7 @@ function App() {
 
   return (
     <div>
-      <SignIn makePlaylist={makePlaylist} handleUsers={handleUsers}/>
+      <SignIn makePlaylist={makePlaylist} handleUsers={handleUsers} handleLoginData={handleLoginData}/>
       <UserCardMin />
       <Song />
     </div>

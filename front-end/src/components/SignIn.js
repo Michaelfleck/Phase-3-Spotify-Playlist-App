@@ -1,14 +1,25 @@
 import React from 'react'
+import { useState } from 'react'
 
-function SignIn() {
+function SignIn({makePlaylist,handleUser}) {
+    const [user, setUser] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        handleUser(user,password)
+        setUser("")
+        setPassword("")
+
+    }
     return (
         <div>
-            <form action="">
-                <input typ='text' placeholder='Username/email'></input>
-                <input typ='text' placeholder='Password'></input>
+            <form action="" onSubmit={handleSubmit}>
+                <input type='text' placeholder='Username/email' value={user} onChange={(e) => setUser(e.target.value)}></input>
+                <input type='text' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)}></input>
                 <button type='submit'>Submit</button>
-                <button type='submit'>Make Playlist</button>
             </form>
+                <button onClick={makePlaylist}>Make Playlist</button>
         </div>
     )
 }

@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 
-function SignIn({makePlaylist,handleUser}) {
+function SignIn({makePlaylist,handleUsers}) {
     const [user, setUser] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        handleUser(user,password)
+        handleUsers(user,password)
         setUser("")
         setPassword("")
 

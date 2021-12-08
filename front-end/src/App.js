@@ -35,12 +35,30 @@ function App() {
   const SPACE_DELIMITER = "%20"
   const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER)
 
-
   const handleLoginData = (handleData) => {
     window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`
+    console.log("handleLoginData ran")
   }
-
-
+  
+  const getReturnedParamsFromSpotifyAuth = (hash) => {
+    console.log(`hash: ${hash}`)
+    const stringAfterHashtag = hash.substring(1);
+    const paramsInUrl = stringAfterHashtag.split("&");
+    const paramsSplitUp = paramsInUrl.reduce((accumulater, currentValue) => {
+      console.log(currentValue);
+      const [key, value] = currentValue.split("=");
+      accumulater[key] = value;
+      return accumulater;
+    }, {})
+    
+    return paramsSplitUp;
+  }
+  
+    useEffect(() => {
+      if (window.location.hash) {
+          getReturnedParamsFromSpotifyAuth(window.location.hash);
+      }
+    });
 
   const [primaryUser, setPrimaryUser] = useState({
     username: "",

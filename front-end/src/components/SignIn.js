@@ -7,9 +7,9 @@ function SignIn({makePlaylist,handleUsers,handleLoginData}) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        handleUsers(user,password)
-        setUser("")
-        setPassword("")
+        // handleUsers(user,password)
+        // setUser("")
+        // setPassword("")
         handleLoginData()
         
     }

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from  'react'
 import { Credentials } from './components/Credentials'
-import axios from 'axios';
+// import axios from 'axios';
 import SignIn from './components/SignIn';
 import UserCardMin from './components/UserCardMin';
 import Song from './components/Song';
@@ -69,33 +69,35 @@ function App() {
           localStorage.setItem("accessToken", access_token);
           localStorage.setItem("tokenType", token_type);
           localStorage.setItem("expiresIn", expires_in);
-      }
-    });
+          fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
+          .then(response => response.json())
+          .then(data => setPrimaryUser(data))
+        }
+    },[]);
 
-  const [primaryUser, setPrimaryUser] = useState({
-    username: "",
-    password: ""
-  })
-  const [secondaryUser, setSecondaryUser] = useState({
-    username: "",
-    password: ""
-  })
-  const handleUsers = (username,password) => {
-    if (username !== null && username !== undefined){
-      if (primaryUser.username.length === 0){
-      setPrimaryUser({
-        username: username,
-        password: password
-      })
-    } else {
-      setSecondaryUser({
-        username: username,
-        password: password
-      })
-    }} else {
-      alert("Invalid User Credentials You Idiot")
-    }
-  }
+  const [primaryUser, setPrimaryUser] = useState({})
+
+  // const [secondaryUser, setSecondaryUser] = useState({
+  //   username: "",
+  //   password: ""
+  // })
+
+  // const handleUsers = (username,password) => {
+  //   if (username !== null && username !== undefined){
+  //     if (primaryUser.username.length === 0){
+  //     setPrimaryUser({
+  //       username: username,
+  //       password: password
+  //     })
+  //   } else {
+  //     setSecondaryUser({
+  //       username: username,
+  //       password: password
+  //     })
+  //   }} else {
+  //     alert("Invalid User Credentials You Idiot")
+  //   }
+  // }
 
   
   const makePlaylist = () => {
@@ -103,13 +105,24 @@ function App() {
 
   }
 
+  const testData = () => {
+    console.log(primaryUser)
+  }
+
+
   return (
     <div>
-      <SignIn makePlaylist={makePlaylist} handleUsers={handleUsers} handleLoginData={handleLoginData}/>
-      <UserCardMin />
+      {/* removed handleUsers={handleUsers} */}
+      <SignIn makePlaylist={makePlaylist} handleLoginData={handleLoginData}/>
       <Song />
+      if (primaryUser.keys.length !== 0){
+        <UserCardMin primaryUser={primaryUser}/>
+      } else {
+        <> UserCard1 waiting to load... </>
+      }
+      
       <TopReadTracks />
-
+      <button onClick={testData}>Console Log Primary User</button>
     </div>
   );
 }

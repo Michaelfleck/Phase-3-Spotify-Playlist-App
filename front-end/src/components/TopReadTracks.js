@@ -30,7 +30,12 @@ const TopReadTracks = () => {
       });
     };
 
-    return <button onClick={handleTopReadTracks}>Test Top Read Tracks</button>
+    return (
+    <>
+      <button onClick={handleTopReadTracks}>Test Top Read Tracks</button>
+      {data?.items ? data.items.map((item) => <p>{item.name}</p>) : null}
+    </>
+    )
   }
 
 

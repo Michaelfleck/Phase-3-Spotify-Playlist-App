@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from  'react'
 import { Credentials } from './components/Credentials'
-// import axios from 'axios';
+import axios from 'axios';
 import SignIn from './components/SignIn';
 import UserCardMin from './components/UserCardMin';
 import Song from './components/Song';
+import TopReadTracks from './components/TopReadTracks';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
   const SPACE_DELIMITER = "%20"
   const SCOPES_URL_PARAM = SCOPES.join(SPACE_DELIMITER)
 
+
   const handleLoginData = (handleData) => {
     window.location = `${SPOTIFY_AUTHORIZE_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI_AFTER_LOGIN}&scope=${SCOPES_URL_PARAM}&response_type=token&show_dialog=true`
     console.log("handleLoginData ran")
@@ -56,7 +58,17 @@ function App() {
   
     useEffect(() => {
       if (window.location.hash) {
-          getReturnedParamsFromSpotifyAuth(window.location.hash);
+          const {
+            access_token,
+            expires_in,
+            token_type
+          } = getReturnedParamsFromSpotifyAuth(window.location.hash);
+
+          // at this point we can store our data in the db
+          localStorage.clear();
+          localStorage.setItem("accessToken", access_token);
+          localStorage.setItem("tokenType", token_type);
+          localStorage.setItem("expiresIn", expires_in);
       }
     });
 
@@ -84,6 +96,8 @@ function App() {
       alert("Invalid User Credentials You Idiot")
     }
   }
+
+  
   const makePlaylist = () => {
     //This is where we need to find the user's song trends
 
@@ -94,6 +108,8 @@ function App() {
       <SignIn makePlaylist={makePlaylist} handleUsers={handleUsers} handleLoginData={handleLoginData}/>
       <UserCardMin />
       <Song />
+      <TopReadTracks />
+
     </div>
   );
 }

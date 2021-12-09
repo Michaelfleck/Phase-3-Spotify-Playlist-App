@@ -72,6 +72,7 @@ function App() {
           fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
           .then(response => response.json())
           .then(data => setPrimaryUser(data))
+          .then( () => fetch(`http://localhost:9292/userTracks`))
         }
     },[]);
 
@@ -110,17 +111,24 @@ function App() {
   }
 
 
+
+  const userMaker = () => {
+    if (Object.keys(primaryUser).length !== 0){
+       const userCard = <UserCardMin primaryUser={primaryUser}/>
+      return userCard
+    } else {
+      return <p> UserCard1 waiting to load... </p>
+    }
+  }
+
+
+
   return (
     <div>
       {/* removed handleUsers={handleUsers} */}
       <SignIn makePlaylist={makePlaylist} handleLoginData={handleLoginData}/>
+      {userMaker()}
       <Song />
-      if (primaryUser.keys.length !== 0){
-        <UserCardMin primaryUser={primaryUser}/>
-      } else {
-        <> UserCard1 waiting to load... </>
-      }
-      
       <TopReadTracks />
       <button onClick={testData}>Console Log Primary User</button>
     </div>

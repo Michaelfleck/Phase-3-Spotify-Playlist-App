@@ -12,12 +12,6 @@
 
 ActiveRecord::Schema.define(version: 2021_12_09_042048) do
 
-  create_table "create_playlist_songs", force: :cascade do |t|
-    t.integer "songs_id"
-    t.integer "playlist_id"
-    t.string "name"
-  end
-
   create_table "playlists", force: :cascade do |t|
     t.integer "user_id"
     t.integer "secondary_user_id"
@@ -32,14 +26,11 @@ ActiveRecord::Schema.define(version: 2021_12_09_042048) do
     t.string "genre_id"
   end
 
-  create_table "user_credentials", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "access_token"
     t.string "spotify_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "name"
     t.string "image"
+    t.string "spotify_link"
   end
 
 end

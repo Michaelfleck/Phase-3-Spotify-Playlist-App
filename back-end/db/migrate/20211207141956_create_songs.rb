@@ -7,6 +7,7 @@ class CreateSongs < ActiveRecord::Migration[6.1]
       t.string :artist_name
       t.string :album_name
       t.string :genre_id
+      t.boolean :is_selected
     end
   end
 end

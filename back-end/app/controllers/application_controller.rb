@@ -17,8 +17,8 @@ class ApplicationController < Sinatra::Base
     end
 
     get '/userInfo' do
-        puts 'something'
-        puts params[:access_token]
+        puts 'userInfo'
+
 
         @@token = params[:access_token]
 
@@ -26,28 +26,41 @@ class ApplicationController < Sinatra::Base
 
         spotify_id = body["id"]
 
-        puts body
 
-        # User.create("access_token":params[:access_token], "spotify_id":spotify_id)
+        User.create("access_token":params[:access_token], "spotify_id":spotify_id)
 
         body.to_json
     end
 
     get '/userTracks' do
 
-      puts @@token
+      puts 'userTracks'
 
       body = retrieveInfo(@@token, "https://api.spotify.com/v1/me/top/tracks")
 
-      puts body
+      # puts body
 
-      userId = User.all.where("")
+      currentUserObject = User.where(access_token: @@token)
+      currentUserId = currentUserObject[0].id
 
-      body.each do |t|
-        Song.create("user_id":)
+      # JSON.parse(response.body)
+
+      # Song.create("song_name": body)
+
+      body["items"].each do |t|
+        Song.create(
+        "user_id": currentUserId, 
+        "song_name":t["name"],
+        "artist_name":t["artists"][0]["name"], 
+        "album_name":t["album"]["name"],
+        "is_selected": false
+        )
       end
 
-      body.to_json
+      # puts body
+      # binding.pry
+      # 0
+      # # body.to_json
     end
 
     def retrieveInfo (token, spotify_url)

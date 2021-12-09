@@ -20,10 +20,12 @@ ActiveRecord::Schema.define(version: 2021_12_09_042048) do
 
   create_table "songs", force: :cascade do |t|
     t.integer "user_id"
+    t.integer "playlist_id"
     t.string "song_name"
     t.string "artist_name"
     t.string "album_name"
     t.string "genre_id"
+    t.boolean "is_selected"
   end
 
   create_table "users", force: :cascade do |t|

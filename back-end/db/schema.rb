@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2021_12_09_042048) do
   create_table "users", force: :cascade do |t|
     t.string "access_token"
     t.string "spotify_id"
+    t.string "display_name"
     t.string "image"
     t.string "spotify_link"
   end

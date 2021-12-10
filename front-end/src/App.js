@@ -55,6 +55,7 @@ function App() {
     
     return paramsSplitUp;
   }
+ 
   
     useEffect(() => {
       if (window.location.hash) {
@@ -70,13 +71,25 @@ function App() {
           localStorage.setItem("tokenType", token_type);
           localStorage.setItem("expiresIn", expires_in);
           fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
-          .then(response => response.json())
-          .then(data => setPrimaryUser(data))
           .then( () => fetch(`http://localhost:9292/userTracks`))
+          .then( () => fetch(`http://localhost:9292/users`))
+          .then(response => response.json())
+          .then(data => {
+              const userList = data
+              const cards = userList.map(el => {
+                return <UserCardMin key={el.spotify_id} user={el}/>
+              })
+              // setPrimaryUser(userList)
+              // setUserCards(userCards)
+              setUserCards(cards)
+              return 
+          })
+          // .then( () => window.location.replace("localhost:3000"))
         }
     },[]);
 
-  const [primaryUser, setPrimaryUser] = useState({})
+  // const [primaryUser, setPrimaryUser] = useState([])
+  const [userCards, setUserCards] = useState([])
 
   // const [secondaryUser, setSecondaryUser] = useState({
   //   username: "",
@@ -106,20 +119,22 @@ function App() {
 
   }
 
-  const testData = () => {
-    console.log(primaryUser)
-  }
+  // const testData = () => {
+  //   console.log(user)
+  // }
 
 
 
-  const userMaker = () => {
-    if (Object.keys(primaryUser).length !== 0){
-       const userCard = <UserCardMin primaryUser={primaryUser}/>
-      return userCard
-    } else {
-      return <p> UserCard1 waiting to load... </p>
-    }
-  }
+  // const userMaker = () => {
+  //   if (primaryUser.length !== 0){
+  //      const userCards = primaryUser.map(el => {
+  //       return <UserCardMin key={el.spotify_id} primaryUser={el}/>
+  //      })
+  //     return userCards
+  //   } else {
+  //     return <p> UserCard1 waiting to load... </p>
+  //   }
+  // }
 
 
 
@@ -127,10 +142,10 @@ function App() {
     <div>
       {/* removed handleUsers={handleUsers} */}
       <SignIn makePlaylist={makePlaylist} handleLoginData={handleLoginData}/>
-      {userMaker()}
+      {userCards}
       <Song />
       <TopReadTracks />
-      <button onClick={testData}>Console Log Primary User</button>
+      {/* <button onClick={testData}>Console Log Primary User</button> */}
     </div>
   );
 }

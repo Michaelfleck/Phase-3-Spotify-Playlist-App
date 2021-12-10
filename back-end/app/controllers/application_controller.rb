@@ -34,27 +34,25 @@ class ApplicationController < Sinatra::Base
         User.all.to_json
     end
 
-    get '/userTracks' do
+    post '/userTracks' do
 
       # puts 'userTracks'
 
       body = retrieveInfo(@@token, "https://api.spotify.com/v1/me/top/tracks")
       
       currentUserObject = User.where(access_token: @@token)
-      currentUserId = currentUserObject.id
+      currentUserId = currentUserObject[0].id
 
-      puts currentUserId
-
-      # body["items"].each do |t|
-      #   Song.create(
-      #   "user_id": currentUserId, 
-      #   "song_name":t["name"],
-      #   "artist_name":t["artists"][0]["name"], 
-      #   "album_name":t["album"]["name"],
-      #   "spotify_uri":t["uri"],
-      #   "is_selected": false
-      #   )
-      # end
+      body["items"].each do |t|
+        Song.create(
+        "user_id": currentUserId, 
+        "song_name":t["name"],
+        "artist_name":t["artists"][0]["name"], 
+        "album_name":t["album"]["name"],
+        "spotify_uri":t["uri"],
+        "is_selected": false
+        )
+      end
       {}.to_json
     end
 

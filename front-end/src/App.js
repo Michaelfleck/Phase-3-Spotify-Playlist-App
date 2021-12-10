@@ -73,7 +73,9 @@ function App() {
       // localStorage.setItem("tokenType", token_type);
       // localStorage.setItem("expiresIn", expires_in);
       fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
-        .then(() => fetch(`http://localhost:9292/userTracks`))
+        .then(() => fetch(`http://localhost:9292/userTracks`,{
+          method: "post"
+        }))
         .then(() => fetch(`http://localhost:9292/users`))
         .then(response => response.json())
         .then(data => {

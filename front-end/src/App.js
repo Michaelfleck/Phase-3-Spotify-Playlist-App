@@ -114,7 +114,7 @@ return (
     {userCards}
     <TopReadTracks />
     <button>Make A Playlist!</button>
-    <Listbox />
+    <Listbox songListElements={songListElements} />
   </div>
 )};
 

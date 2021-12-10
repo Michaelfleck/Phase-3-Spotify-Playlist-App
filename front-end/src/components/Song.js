@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Song() {
+function Song({track}) {
     return (
         <div className="Track">
-            <p>Song Title • Artist Name</p>
+            <button>{track.song_name} • {track.artist_name}</button>
         </div>
     )
 }

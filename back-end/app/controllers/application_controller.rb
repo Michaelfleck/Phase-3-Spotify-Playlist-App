@@ -5,8 +5,6 @@ class ApplicationController < Sinatra::Base
 
     set :default_content_type, 'application/json'
 
-
-
     get '/test' do
         Net::HTTP.get('example.com', '/index.html')
     end
@@ -18,7 +16,6 @@ class ApplicationController < Sinatra::Base
 
     get '/userInfo' do
         puts 'userInfo'
-
 
         @@token = params[:access_token]
 
@@ -33,7 +30,6 @@ class ApplicationController < Sinatra::Base
         body.to_json
     end
 
-
     get '/users' do
         User.all.to_json
     end
@@ -43,8 +39,6 @@ class ApplicationController < Sinatra::Base
       puts 'userTracks'
 
       body = retrieveInfo(@@token, "https://api.spotify.com/v1/me/top/tracks")
-
-      # puts body
 
       currentUserObject = User.where(access_token: @@token)
       currentUserId = currentUserObject[0].id
@@ -59,15 +53,20 @@ class ApplicationController < Sinatra::Base
         "song_name":t["name"],
         "artist_name":t["artists"][0]["name"], 
         "album_name":t["album"]["name"],
+        "spotify_uri":t["uri"],
         "is_selected": false
         )
       end
+    end
 
-      # puts body
-      # binding.pry
-      # 0
-      # # body.to_json
-
+    get '/songs' do
+      const songlist = []
+      User.all.id.each do |userId|
+        Song.where( "user_id == ?", userId ).limit(30).each do |t|
+          songlist << t
+        end
+      end
+      songlist.to_json
     end
 
     def retrieveInfo (token, spotify_url)
@@ -88,7 +87,6 @@ class ApplicationController < Sinatra::Base
       JSON.parse(response.body)
   
     end
-
     
 
 end

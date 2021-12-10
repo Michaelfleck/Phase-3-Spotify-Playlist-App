@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from  'react'
 import { Credentials } from './components/Credentials'
-// import axios from 'axios';
+import axios from 'axios';
 import SignIn from './components/SignIn';
 import UserCardMin from './components/UserCardMin';
-import Song from './components/Song';
 import TopReadTracks from './components/TopReadTracks';
+import Listbox from './components/Listbox';
 
 function App() {
 
@@ -56,6 +56,7 @@ function App() {
     return paramsSplitUp;
   }
  
+  const [songListElements,setSongListElements] = useState([])
   
     useEffect(() => {
       if (window.location.hash) {
@@ -66,10 +67,10 @@ function App() {
           } = getReturnedParamsFromSpotifyAuth(window.location.hash);
 
           // at this point we can store our data in the db
-          localStorage.clear();
-          localStorage.setItem("accessToken", access_token);
-          localStorage.setItem("tokenType", token_type);
-          localStorage.setItem("expiresIn", expires_in);
+          // localStorage.clear();
+          // localStorage.setItem("accessToken", access_token);
+          // localStorage.setItem("tokenType", token_type);
+          // localStorage.setItem("expiresIn", expires_in);
           fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
           .then( () => fetch(`http://localhost:9292/userTracks`))
           .then( () => fetch(`http://localhost:9292/users`))
@@ -113,39 +114,33 @@ function App() {
   //   }
   // }
 
+  //! Pass list of tracks down into listbox
+  //! Then create song elements for each track --> these will be buttons
+  //! buttons will switch is_selected on track in backend
+  //! Then we need a button (MakePlaylist?) which will take all is_selected == true and pass into spotify to make playlist of tracks.
+  //! Returned playlist id needs to be used to call the playlist itself
+  //! Display playlist in new instance of listbox
   
-  const makePlaylist = () => {
-    //This is where we need to find the user's song trends
+    const makePlaylist = () => {
+    fetch('http://localhost:9292/songs')
+    .then(r => r.json())
+    .then(data => {
+      setSongListElements(data)
+    })
+
+    useEffect(() => {
+      
+    },[songListElements]);
 
   }
 
-  // const testData = () => {
-  //   console.log(user)
-  // }
-
-
-
-  // const userMaker = () => {
-  //   if (primaryUser.length !== 0){
-  //      const userCards = primaryUser.map(el => {
-  //       return <UserCardMin key={el.spotify_id} primaryUser={el}/>
-  //      })
-  //     return userCards
-  //   } else {
-  //     return <p> UserCard1 waiting to load... </p>
-  //   }
-  // }
-
-
-
   return (
     <div>
-      {/* removed handleUsers={handleUsers} */}
-      <SignIn makePlaylist={makePlaylist} handleLoginData={handleLoginData}/>
+      <SignIn handleLoginData={handleLoginData}/>
       {userCards}
-      <Song />
       <TopReadTracks />
-      {/* <button onClick={testData}>Console Log Primary User</button> */}
+      <button onClick={makePlaylist}>Make A Playlist!</button>
+      <Listbox />
     </div>
   );
 }

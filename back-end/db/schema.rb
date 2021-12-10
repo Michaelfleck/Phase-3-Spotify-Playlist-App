@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2021_12_09_042048) do
     t.string "artist_name"
     t.string "album_name"
     t.string "genre_id"
+    t.string "spotify_uri"
     t.boolean "is_selected"
   end
 

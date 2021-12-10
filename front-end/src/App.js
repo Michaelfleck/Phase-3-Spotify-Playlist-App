@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Credentials } from './components/Credentials'
-import axios from 'axios';
 import SignIn from './components/SignIn';
 import UserCardMin from './components/UserCardMin';
-import TopReadTracks from './components/TopReadTracks';
-import Listbox from './components/Listbox';
 
 function App() {
 
@@ -57,8 +54,10 @@ function App() {
   }
 
   const [songListElements, setSongListElements] = useState([])
-  const [userCards, setUserCards] = useState([])
+  const [selectedSongs, setSelectedSongs] = useState(new Set())
   
+  const [users, setUsers] = useState([])
+  const [ me, setMe ] = useState(null);
   useEffect(() => {
     if (window.location.hash) {
       const {
@@ -67,28 +66,17 @@ function App() {
         token_type
       } = getReturnedParamsFromSpotifyAuth(window.location.hash);
 
-      // at this point we can store our data in the db
-      // localStorage.clear();
-      // localStorage.setItem("accessToken", access_token);
-      // localStorage.setItem("tokenType", token_type);
-      // localStorage.setItem("expiresIn", expires_in);
+      
       fetch(`http://localhost:9292/userInfo?access_token=${access_token}`)
+        .then(async (resp) => setMe(await resp.json()))
         .then(() => fetch(`http://localhost:9292/userTracks`,{
           method: "post"
         }))
         .then(() => fetch(`http://localhost:9292/users`))
         .then(response => response.json())
-        .then(data => {
-          const userList = data
-          const cards = userList.map(el => {
-            return <UserCardMin key={el.spotify_id} user={el} />
-          })
-          // setPrimaryUser(userList)
-          // setUserCards(userCards)
-          setUserCards(cards)
-          return
+        .then(userList => {
+          setUsers(userList)
         })
-      // .then( () => window.location.replace("localhost:3000"))
     }
   }, []);
 
@@ -106,15 +94,27 @@ function App() {
       .then(data => {
         setSongListElements(data)
       })
-  }, [userCards]);
+  }, [users]);
 
 return (
   <div>
     <SignIn handleLoginData={handleLoginData} />
-    {userCards}
-    <TopReadTracks />
-    <button>Make A Playlist!</button>
-    <Listbox songListElements={songListElements} />
+    {users.map((user) => 
+      <UserCardMin 
+        onSelectSong={(uri) => {
+          setSelectedSongs((selectedSongs) => 
+            new Set([uri, ...Array.from(selectedSongs)])
+          )
+        }} 
+        selectedSongs={selectedSongs}
+        key={user.id} 
+        user={user} 
+        songs={songListElements} 
+      />)}
+    <div style={{ paddingTop: "2em"}} />
+    <button onClick={() => fetch("http://localhost:9292/playlist", {method: "post", body: JSON.stringify({ id: me.id, uris: Array.from(selectedSongs)})})}>Make A Playlist!</button>
+    <button onClick={() => fetch("http://localhost:9292/users", {method: "delete"})}> Kill all Humans! </button>
+    <button onClick={() => fetch("http://localhost:9292/songs", {method: "delete"})}> Kill all Songs! </button>
   </div>
 )};
 

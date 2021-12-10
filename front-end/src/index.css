@@ -1,3 +1,13 @@
+/* :root {
+
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +15,72 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #36454F;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.UserCards {
+  list-style: none;
+  background-color: rgba(128, 128, 128, 0.5);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+
+.UserCard {
+  margin: 1rem;
+  border-style: outset;
+  border-color: gray;
+  background-color: gray;
+  box-shadow: 10px 5px 5px gray;
+  width: 25%;
+  align-content: center;
+}
+
+a{
+  color: black;
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: none;
+  cursor:pointer
+}
+
+
+.circle {
+  border-radius: 50%;
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border: 4px solid #555;
+}
+
+.CardHeader {
+  top: 83px;
+  right: 607px;
+  width: 800px;
+  height: 48px;
+}
+
+.UserCard button {
+  width: calc(75% - 2rem);
+  position: center;
+  margin: auto;
+  border-radius: 2%;
+  margin: 0.1em;
+}
+
+
+
+
+

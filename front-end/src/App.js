@@ -96,9 +96,12 @@ function App() {
       })
   }, [users]);
 
+  const refreshPage = () => window.location.reload
+
 return (
   <div>
     <SignIn handleLoginData={handleLoginData} />
+    <div class="UserCards">
     {users.map((user) => 
       <UserCardMin 
         onSelectSong={(uri) => {
@@ -111,10 +114,15 @@ return (
         user={user} 
         songs={songListElements} 
       />)}
+      </div>
     <div style={{ paddingTop: "2em"}} />
     <button onClick={() => fetch("http://localhost:9292/playlist", {method: "post", body: JSON.stringify({ id: me.id, uris: Array.from(selectedSongs)})})}>Make A Playlist!</button>
-    <button onClick={() => fetch("http://localhost:9292/users", {method: "delete"})}> Kill all Humans! </button>
-    <button onClick={() => fetch("http://localhost:9292/songs", {method: "delete"})}> Kill all Songs! </button>
+    <button onClick={() => {
+      fetch("http://localhost:9292/users", {method: "delete"})
+     .then( () => {refreshPage()})
+    }
+      }> Delete Previous Users </button>
+    <button onClick={() => fetch("http://localhost:9292/songs", {method: "delete"})}> Delete Songs </button>
   </div>
 )};
 

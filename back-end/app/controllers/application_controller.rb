@@ -5,15 +5,6 @@ class ApplicationController < Sinatra::Base
 
     set :default_content_type, 'application/json'
 
-    get '/test' do
-        Net::HTTP.get('example.com', '/index.html')
-    end
-
-    get '/callback' do
-        puts "asdfasdfjalskdfj"
-        puts phone
-    end
-
     get '/userInfo' do
         puts 'userInfo'
 
@@ -41,7 +32,7 @@ class ApplicationController < Sinatra::Base
 
       # puts 'userTracks'
 
-      body = retrieveInfo(@@token, "https://api.spotify.com/v1/me/top/tracks")
+      body = retrieveInfo(@@token, "https://api.spotify.com/v1/me/top/tracks?limit=30")
       
       currentUserObject = User.where(access_token: @@token)
       currentUserId = currentUserObject[0].id
@@ -65,7 +56,7 @@ class ApplicationController < Sinatra::Base
       puts request_payload
       id = request_payload["id"]
       uris = request_payload["uris"]
-      resp = postStuff(@@token, "https://api.spotify.com/v1/users/#{id}/playlists", { public: true, name: "foobar" })
+      resp = postStuff(@@token, "https://api.spotify.com/v1/users/#{id}/playlists", { public: true, name: "My FooBar Blended Playlist" })
       puts resp
       puts postStuff(@@token, "https://api.spotify.com/v1/playlists/#{resp['id']}/tracks", { uris: uris })\
       {}.to_json
